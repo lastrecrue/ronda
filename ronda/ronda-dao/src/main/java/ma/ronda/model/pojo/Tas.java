@@ -1,4 +1,4 @@
-package ma.ronda.model;
+package ma.ronda.model.pojo;
 
 import java.util.List;
 
