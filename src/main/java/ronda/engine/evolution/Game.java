@@ -9,7 +9,7 @@ import ronda.engine.elements.CardSymbol;
 import ronda.engine.elements.CardValue;
 
 public class Game {
-	List<Card> heap = new ArrayList<Card>();
+	private List<Card> heap = new ArrayList<Card>();
 	private List<Card> board = new ArrayList<Card>();
 
 	private boolean isDistributorTeam1 = false;
@@ -37,6 +37,9 @@ public class Game {
 	}
 
 	protected void selectNextDistributor() {
+		// Rule:
+		// distributorPlayer(g) != distributorPlayer(g+1) &&
+		//   distributorPlayer(g).team != distributorPlayer(g+1).team
 		isDistributorTeam1 = !isDistributorTeam1;
 		if (isDistributorTeam1) {
 			isDistributorPlayer1 = !isDistributorPlayer1;
