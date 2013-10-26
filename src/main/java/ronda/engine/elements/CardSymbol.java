@@ -1,8 +1,5 @@
 package ronda.engine.elements;
 
 public enum CardSymbol {
-	goldCardSymbol,
-	swordCardSymbol,
-	cupCardSymbol,
-	staffCardsymbol
+	goldCardSymbol, swordCardSymbol, cupCardSymbol, staffCardsymbol
 }

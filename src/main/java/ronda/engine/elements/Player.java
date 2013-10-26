@@ -3,15 +3,15 @@ package ronda.engine.elements;
 import java.util.List;
 
 public class Player {
-	String			identifier;
-	List<Card>		wonCardsPerHeap;
-	List<Card>		handCardsPerRound;
-	List<Card>		initialHandCardsPerRound;
-	Announcement	announcementPerRound;
-	
+	private String identifier;
+	private List<Card> wonCardsPerHeap;
+	private List<Card> handCardsPerRound;
+	private List<Card> initialHandCardsPerRound;
+	private Announcement announcementPerRound;
+
 	public Player(String id) {
-		assert(id != null);
-		
+		assert (id != null);
+
 		identifier = id;
 		announcementPerRound = Announcement.nothingAnnounced;
 	}
@@ -51,4 +51,10 @@ public class Player {
 	public String getIdentifier() {
 		return identifier;
 	}
+
+	@Override
+	public String toString() {
+		return "Player [identifier=" + identifier + "]";
+	}
+
 }
