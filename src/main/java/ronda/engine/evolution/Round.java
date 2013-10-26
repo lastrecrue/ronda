@@ -7,21 +7,21 @@ import ronda.engine.elements.Card;
 import ronda.engine.elements.Player;
 import ronda.engine.evolution.excpetion.WinnerException;
 
-public class Round {
+public abstract class Round {
 
-	public void startRound(Match match) throws WinnerException {
+	public static void startRound(Match match) throws WinnerException {
 		distributeCard(match);
 		while (!match.getDistributor().getHandCardsPerRound().isEmpty()) {
 			play(match.getNextPLayer());
 		}
 	}
 
-	private void play(Player nextPLayer) {
+	private static void play(Player nextPLayer) throws WinnerException {
 		// TODO Auto-generated method stub
 
 	}
 
-	protected void distributeCard(Match match) {
+	protected static void distributeCard(Match match) {
 		List<Player> players = match.getPlayers();
 		Game currentGame = match.getCurrentGame();
 		Stack<Card> heap = currentGame.getHeap();
@@ -36,7 +36,7 @@ public class Round {
 		}
 	}
 
-	private void distribute4CardPerPlayer(List<Player> players, Stack<Card> heap) {
+	private static void distribute4CardPerPlayer(List<Player> players, Stack<Card> heap) {
 		for (int i = 0; i < 4; i++) {
 			for (Player player : players) {
 				Card pop = heap.pop();
@@ -45,7 +45,7 @@ public class Round {
 		}
 	}
 
-	private void distribute3CardPerPlayer(List<Player> players, Stack<Card> heap) {
+	private static void distribute3CardPerPlayer(List<Player> players, Stack<Card> heap) {
 		for (int i = 0; i < 3; i++) {
 			for (Player player : players) {
 				Card pop = heap.pop();

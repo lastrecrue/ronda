@@ -8,7 +8,6 @@ import java.util.Stack;
 import ronda.engine.elements.Card;
 import ronda.engine.elements.CardSymbol;
 import ronda.engine.elements.CardValue;
-import ronda.engine.evolution.excpetion.WinnerException;
 
 public class Game {
 	private Stack<Card> heap = new Stack<Card>();
@@ -17,14 +16,11 @@ public class Game {
 	private boolean isDistributorTeam1 = false;
 	private boolean isDistributorPlayer1 = false;
 
-	private Round currentRound;
-
 	public Game() {
 		initializeHeap();
 
 		selectNextDistributor();
 
-		currentRound = new Round();
 	}
 
 	protected void initializeHeap() {
@@ -57,15 +53,6 @@ public class Game {
 
 	public Stack<Card> getHeap() {
 		return heap;
-	}
-
-	public void startGame(Match match) throws WinnerException {
-		while (!heap.isEmpty()) {
-			initializeHeap();
-			selectNextDistributor();
-			currentRound.startRound(match);
-		}
-
 	}
 
 }

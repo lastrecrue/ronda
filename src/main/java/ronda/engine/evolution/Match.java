@@ -51,8 +51,17 @@ public class Match {
 
 	public void startMatch() throws WinnerException {
 		while (true) {
-			currentGame.startGame(this);
+			startGame(this);
 		}
+	}
+
+	public void startGame(Match match) throws WinnerException {
+		while (!currentGame.getHeap().isEmpty()) {
+			currentGame.initializeHeap();
+			currentGame.selectNextDistributor();
+			Round.startRound(match);
+		}
+
 	}
 
 	public Team getWinnerTeam() {
