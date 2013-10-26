@@ -35,18 +35,19 @@ public class GameTest extends AbstractTest {
 	public void selectNextDistributorTest() {
 		List<Player> players = new ArrayList<Player>();
 		Player player11 = new Player("player11");
-		players.add(player11);
 		Player player12 = new Player("player12");
-		players.add(player12);
 		Player player21 = new Player("player21");
-		players.add(player21);
 		Player player22 = new Player("player22");
+		players.add(player11);
+		players.add(player21);
+		players.add(player12);
 		players.add(player22);
 		Team team1 = new Team("team1", player11, player12);
 		Team team2 = new Team("team2", player21, player22);
 		Match match = new Match(team1, team2);
 		for (int i = 0; i < 8; i++) {
-			match.getDistributor().equals(players.get(i % 4));
+//			logger.info(match.getDistributor());
+			assertTrue(match.getDistributor().equals(players.get(i % 4)));
 			match.currentGame.selectNextDistributor();
 		}
 	}
