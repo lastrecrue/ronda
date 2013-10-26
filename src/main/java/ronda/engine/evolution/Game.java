@@ -3,13 +3,15 @@ package ronda.engine.evolution;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Stack;
 
 import ronda.engine.elements.Card;
 import ronda.engine.elements.CardSymbol;
 import ronda.engine.elements.CardValue;
+import ronda.engine.evolution.excpetion.WinnerException;
 
 public class Game {
-	private List<Card> heap = new ArrayList<Card>();
+	private Stack<Card> heap = new Stack<Card>();
 	private List<Card> board = new ArrayList<Card>();
 
 	private boolean isDistributorTeam1 = false;
@@ -38,8 +40,7 @@ public class Game {
 
 	protected void selectNextDistributor() {
 		// Rule:
-		// distributorPlayer(g) != distributorPlayer(g+1) &&
-		//   distributorPlayer(g).team != distributorPlayer(g+1).team
+		// distributorPlayer(g) != distributorPlayer(g+1) && distributorPlayer(g).team != distributorPlayer(g+1).team
 		isDistributorTeam1 = !isDistributorTeam1;
 		if (isDistributorTeam1) {
 			isDistributorPlayer1 = !isDistributorPlayer1;
@@ -54,8 +55,17 @@ public class Game {
 		return (byte) (isDistributorPlayer1 ? 1 : 2);
 	}
 
-	public List<Card> getHeap() {
+	public Stack<Card> getHeap() {
 		return heap;
+	}
+
+	public void startGame(Match match) throws WinnerException {
+		while (!heap.isEmpty()) {
+			initializeHeap();
+			selectNextDistributor();
+			currentRound.startRound(match);
+		}
+
 	}
 
 }

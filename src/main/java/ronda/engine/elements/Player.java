@@ -1,11 +1,12 @@
 package ronda.engine.elements;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Player {
 	private String identifier;
 	private List<Card> wonCardsPerHeap;
-	private List<Card> handCardsPerRound;
+	private List<Card> handCardsPerRound = new ArrayList<Card>();
 	private List<Card> initialHandCardsPerRound;
 	private Announcement announcementPerRound;
 
