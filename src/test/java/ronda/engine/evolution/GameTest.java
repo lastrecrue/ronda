@@ -18,10 +18,10 @@ public class GameTest extends AbstractTest {
 		Game game1 = new Game();
 		Game game2 = new Game();
 
-		assertTrue(game1.heap.size() == 40);
+		assertTrue(game1.getHeap().size() == 40);
 
-		List<Card> heap1 = game1.heap;
-		List<Card> heap2 = game2.heap;
+		List<Card> heap1 = game1.getHeap();
+		List<Card> heap2 = game2.getHeap();
 		boolean sameList = false;
 		for (int i = 0; i < 40; i++) {
 
@@ -46,9 +46,9 @@ public class GameTest extends AbstractTest {
 		Team team2 = new Team("team2", player21, player22);
 		Match match = new Match(team1, team2);
 		for (int i = 0; i < 8; i++) {
-//			logger.info(match.getDistributor());
+			// logger.info(match.getDistributor());
 			assertTrue(match.getDistributor().equals(players.get(i % 4)));
-			match.currentGame.selectNextDistributor();
+			match.getCurrentGame().selectNextDistributor();
 		}
 	}
 }

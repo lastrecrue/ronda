@@ -53,4 +53,9 @@ public class Game {
 	protected byte getDistributorPlayerIndex() {
 		return (byte) (isDistributorPlayer1 ? 1 : 2);
 	}
+
+	public List<Card> getHeap() {
+		return heap;
+	}
+
 }
