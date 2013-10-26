@@ -15,14 +15,14 @@ public class Game {
 	private boolean isDistributorTeam1 = false;
 	private boolean isDistributorPlayer1 = false;
 
-	private RoundTest currentRound;
+	private Round currentRound;
 
 	public Game() {
 		initializeHeap();
 
 		selectNextDistributor();
 
-		currentRound = new RoundTest();
+		currentRound = new Round();
 	}
 
 	protected void initializeHeap() {
