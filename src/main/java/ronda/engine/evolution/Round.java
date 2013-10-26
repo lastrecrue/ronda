@@ -5,6 +5,7 @@ import java.util.Stack;
 
 import ronda.engine.elements.Card;
 import ronda.engine.elements.Player;
+import ronda.engine.evolution.event.PlayerEvent;
 import ronda.engine.evolution.excpetion.WinnerException;
 
 public abstract class Round {
@@ -12,13 +13,10 @@ public abstract class Round {
 	public static void startRound(Match match) throws WinnerException {
 		distributeCard(match);
 		while (!match.getDistributor().getHandCardsPerRound().isEmpty()) {
-			play(match.getNextPLayer());
+			PlayerEvent playerEvent = new PlayerEvent(match.getNextPLayer());
+			playerEvent.waitEvent(match);
+
 		}
-	}
-
-	private static void play(Player nextPLayer) throws WinnerException {
-		// TODO Auto-generated method stub
-
 	}
 
 	protected static void distributeCard(Match match) {
