@@ -39,7 +39,7 @@ public class Game {
 	protected void selectNextDistributor() {
 		// Rule:
 		// distributorPlayer(g) != distributorPlayer(g+1) &&
-		//   distributorPlayer(g).team != distributorPlayer(g+1).team
+		// distributorPlayer(g).team != distributorPlayer(g+1).team
 		isDistributorTeam1 = !isDistributorTeam1;
 		if (isDistributorTeam1) {
 			isDistributorPlayer1 = !isDistributorPlayer1;
@@ -53,4 +53,9 @@ public class Game {
 	protected byte getDistributorPlayerIndex() {
 		return (byte) (isDistributorPlayer1 ? 1 : 2);
 	}
+
+	public List<Card> getHeap() {
+		return heap;
+	}
+
 }

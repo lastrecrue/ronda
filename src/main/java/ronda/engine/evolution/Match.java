@@ -19,4 +19,9 @@ public class Match {
 		Team team = currentGame.getDistributorTeamIndex() == 1 ? team1 : team2;
 		return team.getPlayer(currentGame.getDistributorPlayerIndex() == 1 ? 1 : 2);
 	}
+
+	public Game getCurrentGame() {
+		return currentGame;
+	}
+
 }
