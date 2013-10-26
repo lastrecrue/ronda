@@ -6,7 +6,7 @@ import ronda.engine.elements.Team;
 public class Match {
 	private Team team1;
 	private Team team2;
-	Game currentGame;
+	private Game currentGame;
 
 	public Match(Team team1, Team team2) {
 		this.team1 = team1;
