@@ -11,14 +11,12 @@ public class Team {
 	}
 
 	public Team(String identifier, Player player1, Player player2) {
-		super();
 		this.identifier = identifier;
 		this.player1 = player1;
 		this.player2 = player2;
 	}
 
 	public Team(String identifier, Player player1) {
-		super();
 		this.identifier = identifier;
 		this.player1 = player1;
 	}

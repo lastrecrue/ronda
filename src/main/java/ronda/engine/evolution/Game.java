@@ -10,20 +10,22 @@ import ronda.engine.elements.CardSymbol;
 import ronda.engine.elements.CardValue;
 
 public class Game {
-	private Stack<Card> heap = new Stack<Card>();
+	private Match currentMatch;
+	private Round currentRound;
+	private List<Card> heap = new ArrayList<Card>();
 	private List<Card> board = new ArrayList<Card>();
 
 	private boolean isDistributorTeam1 = false;
 	private boolean isDistributorPlayer1 = false;
-
-	public Game() {
-		initializeHeap();
-
-		selectNextDistributor();
-
+	
+	public Game(Match currentMatch) {
+		this.currentMatch = currentMatch;
+		currentRound = new Round(currentMatch);
 	}
 
 	protected void initializeHeap() {
+		assert(heap.size() == 0 && board.size() == 0);
+		
 		for (CardSymbol symbol : CardSymbol.values()) {
 			CardValue currentCardValue = new CardValue((byte) 1);
 			do {
@@ -47,12 +49,25 @@ public class Game {
 		return (byte) (isDistributorTeam1 ? 1 : 2);
 	}
 
+	public List<Card> getBoard() {
+		return board;
+	}
+
 	protected byte getDistributorPlayerIndex() {
 		return (byte) (isDistributorPlayer1 ? 1 : 2);
 	}
 
-	public Stack<Card> getHeap() {
+	public List<Card> getHeap() {
 		return heap;
+	}
+
+	public void run() {
+		initializeHeap();
+		selectNextDistributor();
+		
+		while (!currentMatch.matchEnded()) {
+			currentRound.run();
+		}
 	}
 
 }

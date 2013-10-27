@@ -16,7 +16,7 @@ public class Card {
 	public CardValue getValue() {
 		return value;
 	}
-
+	
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
