@@ -40,7 +40,7 @@ public class Game {
 		// distributorPlayer(g) != distributorPlayer(g+1) &&
 		// distributorPlayer(g).team != distributorPlayer(g+1).team
 		isDistributorTeam1 = !isDistributorTeam1;
-		if (isDistributorTeam1) {
+		if (isDistributorTeam1 && currentMatch.twoPlayersVersusTwoPlayersGame()) {
 			isDistributorPlayer1 = !isDistributorPlayer1;
 		}
 	}
