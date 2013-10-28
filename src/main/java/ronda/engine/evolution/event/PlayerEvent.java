@@ -18,7 +18,7 @@ public class PlayerEvent {
 		// : if needed change the score
 		// : else change player card and board card
 		// else if action is report close the possibility of report change the score
-		// and wait pley card event
+		// and wait play card event
 
 	}
 
