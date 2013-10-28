@@ -13,7 +13,7 @@ import ronda.engine.elements.Move;
 import ronda.engine.elements.Player;
 
 public class Round {
-	private Match currentMatch;
+	private final Match currentMatch;
 	private boolean maximumScoreReached;
 
 	public Round(Match currentMatch) {
@@ -23,7 +23,7 @@ public class Round {
 	public void run() {
 		maximumScoreReached = false;
 		distribute();
-		
+
 		while (!roundEnded()) {
 			Player nextPlayer = currentMatch.getNextPlayer();
 			Move move = nextPlayer.play();
@@ -43,42 +43,45 @@ public class Round {
 		if (!move.isValid()) {
 			throw new InvalidMoveException(move, "Invalid move");
 		}
-		
+
 		// Move the card to the board
 		List<Card> board = currentMatch.getCurrentGame().getBoard();
 		Player player = move.getPlayer();
 		Card movedCard = move.getCardMoved();
-		player.getHandCardsPerRound().remove(movedCard);	
+		player.getHandCardsPerRound().remove(movedCard);
 		board.add(movedCard);
-		
+
 		// Determine cards won by this move
 		if (board.size() == 1) {
-			return;	// Nothing to do
+			return; // Nothing to do
 		}
-		
+
 		Map<CardValue, List<Card>> duplicatedCardValueMap = getDuplicateCardOnBoardAndSuccessors(board);
 		if (duplicatedCardValueMap.size() == 0) {
-			return;	// Nothing to do
+			return; // Nothing to do
 		}
-				
-		// Remove the card from the board, and remove its duplicate, and successors
-		for (Entry<CardValue, List<Card>> entry : duplicatedCardValueMap.entrySet()) {
+
+		// Remove the card from the board, and remove its duplicate, and
+		// successors
+		for (Entry<CardValue, List<Card>> entry : duplicatedCardValueMap
+				.entrySet()) {
 			for (Card card : entry.getValue()) {
 				board.remove(card);
 				player.getWonCardsPerHeap().add(card);
 			}
 		}
-		
+
 		if (board.isEmpty()) {
 			// Missa
 		}
 	}
-	
+
 	private void incrementScore(Player player, byte increment) {
-		
+		// TODO
 	}
 
-	private static Map<CardValue, List<Card>> getFrequencyOfOccurencesInCardList(List<Card> list) {
+	private static Map<CardValue, List<Card>> getFrequencyOfOccurencesInCardList(
+			List<Card> list) {
 		Map<CardValue, List<Card>> result = new HashMap<CardValue, List<Card>>();
 
 		for (Card card : list) {
@@ -90,33 +93,36 @@ public class Round {
 			}
 			cardsOfValue.add(card);
 		}
-		
+
 		return result;
 	}
 
-	private Map<CardValue, List<Card>> getDuplicateCardOnBoardAndSuccessors(List<Card> list) {
+	private Map<CardValue, List<Card>> getDuplicateCardOnBoardAndSuccessors(
+			List<Card> list) {
 		Map<CardValue, List<Card>> resultComplete = getFrequencyOfOccurencesInCardList(list);
-		
+
 		Map<CardValue, List<Card>> result = new HashMap<CardValue, List<Card>>();
-		Iterator<Entry<CardValue, List<Card>>> iter = resultComplete.entrySet().iterator();
-		
+		Iterator<Entry<CardValue, List<Card>>> iter = resultComplete.entrySet()
+				.iterator();
+
 		Entry<CardValue, List<Card>> entry = null;
 		while (iter.hasNext()) {
 			entry = iter.next();
-			assert(entry.getValue().size() <= 2);
+			assert (entry.getValue().size() <= 2);
 			if (entry.getValue().size() == 2) {
 				result.put(entry.getKey(), entry.getValue());
 				break;
 			}
 		}
-		
-		if (result.size() == 0) return result;
-		
+
+		if (result.size() == 0)
+			return result;
+
 		CardValue previousCardValue = entry.getKey();
 		while (iter.hasNext()) {
 			entry = iter.next();
-			assert(entry.getValue().size() == 1);
-						
+			assert (entry.getValue().size() == 1);
+
 			if (!entry.getKey().isNext(previousCardValue)) {
 				break;
 			}
@@ -124,34 +130,47 @@ public class Round {
 			result.put(entry.getKey(), entry.getValue());
 			previousCardValue = entry.getKey();
 		}
-		
+
 		return result;
 	}
 
+	/**
+	 * Distribute cards to players in this round.
+	 */
 	private void distribute() {
 		byte cardsCount = 4;
-		
+
+		// if we are not in the first round, and the game is a 2vs2 game, then
+		// we distribute only 3 cards
 		if (currentMatch.getCurrentGame().getHeap().size() < 40) {
 			if (currentMatch.twoPlayersVersusTwoPlayersGame()) {
 				cardsCount = 3;
 			}
 		}
-		
+
 		List<Player> players = currentMatch.getPlayers();
 		Player distibutorPlayer = currentMatch.getDistributor();
 		int distributorIndex = players.indexOf(distibutorPlayer);
-		
+		System.out.println("distributorPlayer : " + distibutorPlayer);
+		System.out.println("distributorIndex : " + distributorIndex);
+
+		// distribute cards from the heap, beginning with the player next to the
+		// distributor
 		List<Card> heap = currentMatch.getCurrentGame().getHeap();
-		for (byte i = 0; i < cardsCount; i++) {
-			for (int j = distributorIndex + 1; j != distributorIndex; j = (++j) % players.size()) {
-				Player cardReceivingPlayer = currentMatch.getPlayers().get(j);
-				cardReceivingPlayer.getHandCardsPerRound().add(heap.remove(0));
-			}
+		int indexOfPlayerToDistributeTo = distributorIndex + 1;
+
+		while (distibutorPlayer.getHandCardsPerRound().size() < cardsCount) {
+			Player cardReceivingPlayer = currentMatch.getPlayers().get(
+					indexOfPlayerToDistributeTo);
+			System.out.println("for the player " + cardReceivingPlayer);
+			cardReceivingPlayer.getHandCardsPerRound().add(heap.remove(0));
+			indexOfPlayerToDistributeTo++;
+			indexOfPlayerToDistributeTo %= players.size();
 		}
 	}
-	
+
 	private boolean roundEnded() {
-		return currentMatch.getDistributor().getHandCardsPerRound().isEmpty() ||
-			maximumScoreReached;
+		return currentMatch.getDistributor().getHandCardsPerRound().isEmpty()
+				|| maximumScoreReached;
 	}
 }
