@@ -5,16 +5,15 @@ import java.util.List;
 
 public class Player {
 	private String identifier;
-	private List<Card> wonCardsPerHeap;
+	private List<Card> wonCardsPerHeap = new ArrayList<Card>();
 	private List<Card> handCardsPerRound = new ArrayList<Card>();
-	private List<Card> initialHandCardsPerRound;
-	private Announcement announcementPerRound;
+	private List<Card> initialHandCardsPerRound = new ArrayList<Card>();
+	private Announcement announcementPerRound = Announcement.nothingAnnounced;
 
 	public Player(String id) {
 		assert (id != null);
 
 		identifier = id;
-		announcementPerRound = Announcement.nothingAnnounced;
 	}
 
 	public List<Card> getWonCardsPerHeap() {
@@ -58,4 +57,8 @@ public class Player {
 		return "Player [identifier=" + identifier + "]";
 	}
 
+	public Move play() {
+		// TODO
+		return null;
+	}
 }

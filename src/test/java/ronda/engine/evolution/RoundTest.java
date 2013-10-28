@@ -14,7 +14,8 @@ public class RoundTest extends AbstractTest {
 	@Test
 	public void distributeCardTestFo2Vs2() {
 		logger.info("distributeCardTestFo2Vs2");
-		Match match = MatchBuilder.match2Vs2Builder(player11, player12, player21, player22);
+		Match match = MatchBuilder.match2Vs2Builder(player11, player12,
+				player21, player22);
 		distributionCardTest(match, true);
 	}
 
@@ -28,7 +29,8 @@ public class RoundTest extends AbstractTest {
 	private void distributionCardTest(Match match, boolean is2Vs2) {
 		int nbCard = 4;
 		while (!match.getCurrentGame().getHeap().isEmpty()) {
-			Round.distributeCard(match);
+			Round round = new Round(match);
+			round.run();
 			List<Player> players = match.getPlayers();
 			for (Player player : players) {
 				logger.info(player);

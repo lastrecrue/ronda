@@ -3,6 +3,10 @@ package ronda.engine.elements;
 public class CardValue {
 	private byte number;
 
+	public CardValue() {
+		number = 1;
+	}
+
 	public CardValue(byte n) {
 		assert (n >= 1 && n <= 12 && n != 8 && n != 9);
 
@@ -21,10 +25,10 @@ public class CardValue {
 	}
 
 	public boolean isNext(CardValue cardValue) {
-		CardValue nextThis = getNext();
-		if (nextThis == null)
+		CardValue nextOfThis = getNext();
+		if (nextOfThis == null)
 			return false;
-		return nextThis.equals(cardValue);
+		return nextOfThis.equals(cardValue);
 	}
 
 	@Override
