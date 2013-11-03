@@ -151,8 +151,8 @@ public class Round {
 		List<Player> players = currentMatch.getPlayers();
 		Player distibutorPlayer = currentMatch.getDistributor();
 		int distributorIndex = players.indexOf(distibutorPlayer);
-		System.out.println("distributorPlayer : " + distibutorPlayer);
-		System.out.println("distributorIndex : " + distributorIndex);
+		// System.out.println("distributorPlayer : " + distibutorPlayer);
+		// System.out.println("distributorIndex : " + distributorIndex);
 
 		// distribute cards from the heap, beginning with the player next to the
 		// distributor
@@ -162,7 +162,7 @@ public class Round {
 		while (distibutorPlayer.getHandCardsPerRound().size() < cardsCount) {
 			Player cardReceivingPlayer = currentMatch.getPlayers().get(
 					indexOfPlayerToDistributeTo);
-			System.out.println("for the player " + cardReceivingPlayer);
+			// System.out.println("for the player " + cardReceivingPlayer);
 			cardReceivingPlayer.getHandCardsPerRound().add(heap.remove(0));
 			indexOfPlayerToDistributeTo++;
 			indexOfPlayerToDistributeTo %= players.size();

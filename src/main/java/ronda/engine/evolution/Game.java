@@ -42,6 +42,10 @@ public class Game {
 		isDistributorTeam1 = !isDistributorTeam1;
 		if (isDistributorTeam1 && currentMatch.twoPlayersVersusTwoPlayersGame()) {
 			isDistributorPlayer1 = !isDistributorPlayer1;
+		} else { // case of 1vs1 game
+			if (!currentMatch.twoPlayersVersusTwoPlayersGame()) {
+				isDistributorPlayer1 = true;
+			}
 		}
 	}
 
