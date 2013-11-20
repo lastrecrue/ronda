@@ -3,17 +3,55 @@ package ronda.engine.elements;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
+
 public class Player {
-	private String identifier;
+
+	protected Logger logger = Logger.getLogger(Player.class);
+	private final String identifier;
 	private List<Card> wonCardsPerHeap = new ArrayList<Card>();
 	private List<Card> handCardsPerRound = new ArrayList<Card>();
 	private List<Card> initialHandCardsPerRound = new ArrayList<Card>();
 	private Announcement announcementPerRound = Announcement.nothingAnnounced;
+	private boolean isActivePlayer;
+	private Move currentPlayerMove;
 
 	public Player(String id) {
 		assert (id != null);
 
 		identifier = id;
+	}
+
+	/**
+	 * @return the isActivePlayer
+	 */
+	public synchronized boolean isActivePlayer() {
+		return isActivePlayer;
+	}
+
+	/**
+	 * @param isActivePlayer
+	 *            the isActivePlayer to set
+	 */
+	public synchronized void setActivePlayer(boolean isActivePlayer) {
+		// logger.debug("player : " + identifier + " is active : "
+		// + isActivePlayer);
+		this.isActivePlayer = isActivePlayer;
+	}
+
+	/**
+	 * @return the currentPlayerMove
+	 */
+	public synchronized Move getCurrentPlayerMove() {
+		return currentPlayerMove;
+	}
+
+	/**
+	 * @param currentPlayerMove
+	 *            the currentPlayerMove to set
+	 */
+	public synchronized void setCurrentPlayerMove(Move currentPlayerMove) {
+		this.currentPlayerMove = currentPlayerMove;
 	}
 
 	public List<Card> getWonCardsPerHeap() {
@@ -54,11 +92,6 @@ public class Player {
 
 	@Override
 	public String toString() {
-		return "Player [identifier=" + identifier + "]";
-	}
-
-	public Move play() {
-		// TODO
-		return null;
+		return identifier;
 	}
 }

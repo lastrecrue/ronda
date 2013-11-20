@@ -42,4 +42,7 @@ public class Team {
 		this.identifier = identifier;
 	}
 
+	public boolean isPlayerInTeam(Player player) {
+		return (player.equals(player1) || player.equals(player2));
+	}
 }

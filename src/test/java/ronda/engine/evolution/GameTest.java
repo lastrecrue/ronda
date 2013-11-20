@@ -106,9 +106,9 @@ public class GameTest extends AbstractTest {
 		match.getCurrentGame().selectNextDistributor();
 
 		assertEquals(player11, match.getDistributor());
-		assertEquals(player21, match.getNextPlayer());
-		assertEquals(player12, match.getNextPlayer());
-		assertEquals(player22, match.getNextPlayer());
-		assertEquals(player11, match.getNextPlayer());
+		assertEquals(player21, match.getNextPlayer(player11));
+		assertEquals(player12, match.getNextPlayer(player21));
+		assertEquals(player22, match.getNextPlayer(player12));
+		assertEquals(player11, match.getNextPlayer(player22));
 	}
 }

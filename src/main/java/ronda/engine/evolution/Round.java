@@ -7,14 +7,20 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.apache.log4j.Logger;
+
 import ronda.engine.elements.Card;
 import ronda.engine.elements.CardValue;
 import ronda.engine.elements.Move;
 import ronda.engine.elements.Player;
+import ronda.engine.elements.Team;
 
 public class Round {
+
+	protected Logger logger = Logger.getLogger(Round.class);
 	private final Match currentMatch;
 	private boolean maximumScoreReached;
+	private Player lastEatingPlayer = null;
 
 	public Round(Match currentMatch) {
 		this.currentMatch = currentMatch;
@@ -23,10 +29,23 @@ public class Round {
 	public void run() {
 		maximumScoreReached = false;
 		distribute();
+		Player nextPlayer = currentMatch.getDistributor();
 
 		while (!roundEnded()) {
-			Player nextPlayer = currentMatch.getNextPlayer();
-			Move move = nextPlayer.play();
+			logger.debug("board state : "
+					+ currentMatch.getCurrentGame().getBoard());
+			nextPlayer = currentMatch.getNextPlayer(nextPlayer);
+			nextPlayer.setActivePlayer(true);
+			while (nextPlayer.isActivePlayer()) {
+				// while player is active, sleep
+				try {
+					Thread.sleep(50);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+			// when player is not active anymore, get his move
+			Move move = nextPlayer.getCurrentPlayerMove();
 			boolean moveApplied;
 			do {
 				try {
@@ -36,11 +55,23 @@ public class Round {
 					moveApplied = false;
 				}
 			} while (!moveApplied);
+
+			// case of the last move in the round
+			if (currentMatch.getDistributor().equals(nextPlayer)
+					&& currentMatch.getCurrentGame().getHeap().isEmpty()
+					&& nextPlayer.getHandCardsPerRound().isEmpty()) {
+				for (Card card : currentMatch.getCurrentGame().getBoard()) {
+					lastEatingPlayer.getWonCardsPerHeap().add(card);
+				}
+				logger.debug("last eating player is : "
+						+ lastEatingPlayer.getIdentifier());
+				currentMatch.getCurrentGame().getBoard().clear();
+			}
 		}
 	}
 
 	private void applyMove(Move move) throws InvalidMoveException {
-		if (!move.isValid()) {
+		if (move == null || !move.isValid()) {
 			throw new InvalidMoveException(move, "Invalid move");
 		}
 
@@ -48,7 +79,7 @@ public class Round {
 		List<Card> board = currentMatch.getCurrentGame().getBoard();
 		Player player = move.getPlayer();
 		Card movedCard = move.getCardMoved();
-		player.getHandCardsPerRound().remove(movedCard);
+		// player.getHandCardsPerRound().remove(movedCard);
 		board.add(movedCard);
 
 		// Determine cards won by this move
@@ -70,14 +101,18 @@ public class Round {
 				player.getWonCardsPerHeap().add(card);
 			}
 		}
+		lastEatingPlayer = player;
 
 		if (board.isEmpty()) {
 			// Missa
+			logger.debug(player.getIdentifier() + " did missa.");
+			incrementScore(player, (byte) 1);
 		}
 	}
 
 	private void incrementScore(Player player, byte increment) {
-		// TODO
+		Team teamToReward = currentMatch.getPlayerTeam(player);
+		teamToReward.setScore((byte) (teamToReward.getScore() + increment));
 	}
 
 	private static Map<CardValue, List<Card>> getFrequencyOfOccurencesInCardList(
@@ -100,35 +135,32 @@ public class Round {
 	private Map<CardValue, List<Card>> getDuplicateCardOnBoardAndSuccessors(
 			List<Card> list) {
 		Map<CardValue, List<Card>> resultComplete = getFrequencyOfOccurencesInCardList(list);
+		boolean duplicateFound = false;
 
 		Map<CardValue, List<Card>> result = new HashMap<CardValue, List<Card>>();
 		Iterator<Entry<CardValue, List<Card>>> iter = resultComplete.entrySet()
 				.iterator();
 
 		Entry<CardValue, List<Card>> entry = null;
+		CardValue previousCardValue = null;
 		while (iter.hasNext()) {
 			entry = iter.next();
 			assert (entry.getValue().size() <= 2);
 			if (entry.getValue().size() == 2) {
 				result.put(entry.getKey(), entry.getValue());
-				break;
+				duplicateFound = true;
+				previousCardValue = entry.getKey();
+			} else {
+				if (duplicateFound) {
+					assert (entry.getValue().size() == 1);
+					if (previousCardValue.isNext(entry.getKey())) {
+						result.put(entry.getKey(), entry.getValue());
+						previousCardValue = entry.getKey();
+					} else {
+						break;
+					}
+				}
 			}
-		}
-
-		if (result.size() == 0)
-			return result;
-
-		CardValue previousCardValue = entry.getKey();
-		while (iter.hasNext()) {
-			entry = iter.next();
-			assert (entry.getValue().size() == 1);
-
-			if (!entry.getKey().isNext(previousCardValue)) {
-				break;
-			}
-
-			result.put(entry.getKey(), entry.getValue());
-			previousCardValue = entry.getKey();
 		}
 
 		return result;
@@ -149,21 +181,30 @@ public class Round {
 		}
 
 		List<Player> players = currentMatch.getPlayers();
+
+		// wipe initial hand cards of previous round
+		for (Player player : players) {
+			player.getInitialHandCardsPerRound().clear();
+		}
+
 		Player distibutorPlayer = currentMatch.getDistributor();
+		logger.debug("player : " + distibutorPlayer + " is distributing.");
 		int distributorIndex = players.indexOf(distibutorPlayer);
-		// System.out.println("distributorPlayer : " + distibutorPlayer);
-		// System.out.println("distributorIndex : " + distributorIndex);
 
 		// distribute cards from the heap, beginning with the player next to the
 		// distributor
 		List<Card> heap = currentMatch.getCurrentGame().getHeap();
 		int indexOfPlayerToDistributeTo = distributorIndex + 1;
+		indexOfPlayerToDistributeTo %= players.size();
+		System.out.println(indexOfPlayerToDistributeTo);
 
 		while (distibutorPlayer.getHandCardsPerRound().size() < cardsCount) {
 			Player cardReceivingPlayer = currentMatch.getPlayers().get(
 					indexOfPlayerToDistributeTo);
-			// System.out.println("for the player " + cardReceivingPlayer);
-			cardReceivingPlayer.getHandCardsPerRound().add(heap.remove(0));
+			Card distributedCard = heap.remove(0);
+			cardReceivingPlayer.getHandCardsPerRound().add(distributedCard);
+			cardReceivingPlayer.getInitialHandCardsPerRound().add(
+					distributedCard);
 			indexOfPlayerToDistributeTo++;
 			indexOfPlayerToDistributeTo %= players.size();
 		}

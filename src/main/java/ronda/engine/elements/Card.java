@@ -1,8 +1,8 @@
 package ronda.engine.elements;
 
 public class Card {
-	private CardSymbol symbol;
-	private CardValue value;
+	private final CardSymbol symbol;
+	private final CardValue value;
 
 	public Card(CardSymbol symbol, CardValue value) {
 		this.symbol = symbol;
@@ -16,7 +16,7 @@ public class Card {
 	public CardValue getValue() {
 		return value;
 	}
-	
+
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -38,7 +38,7 @@ public class Card {
 
 	@Override
 	public String toString() {
-		return "Card [symbol=" + symbol + ", value=" + value + "]";
+		return value.getNumber() + symbol.toString().substring(0, 2);
 	}
 
 }

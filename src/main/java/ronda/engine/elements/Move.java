@@ -41,7 +41,7 @@ public class Move {
 	 * @return
 	 */
 	public boolean isValid() {
-		if (player.getHandCardsPerRound().indexOf(cardMoved) == -1)
+		if (player.getInitialHandCardsPerRound().indexOf(cardMoved) == -1)
 			return false;
 		return true;
 	}

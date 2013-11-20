@@ -4,11 +4,15 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.apache.log4j.Logger;
+
 import ronda.engine.elements.Card;
 import ronda.engine.elements.CardSymbol;
 import ronda.engine.elements.CardValue;
 
 public class Game {
+
+	protected Logger logger = Logger.getLogger(Game.class);
 	private final Match currentMatch;
 	private final Round currentRound;
 	private final List<Card> heap = new ArrayList<Card>();
@@ -71,6 +75,12 @@ public class Game {
 
 		while (!currentMatch.matchEnded()) {
 			currentRound.run();
+			logger.debug("end of round.");
+			if (heap.isEmpty()) {
+				logger.debug("end of game. score : ");
+				initializeHeap();
+				selectNextDistributor();
+			}
 		}
 	}
 
