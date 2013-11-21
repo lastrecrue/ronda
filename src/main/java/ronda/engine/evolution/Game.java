@@ -9,6 +9,7 @@ import org.apache.log4j.Logger;
 import ronda.engine.elements.Card;
 import ronda.engine.elements.CardSymbol;
 import ronda.engine.elements.CardValue;
+import ronda.engine.elements.Player;
 
 public class Game {
 
@@ -77,11 +78,52 @@ public class Game {
 			currentRound.run();
 			logger.debug("end of round.");
 			if (heap.isEmpty()) {
-				logger.debug("end of game. score : ");
+				resolveWonCardsPerTeam();
+				logger.debug("End of game. score (team1#team2) : "
+						+ currentMatch.getScore());
 				initializeHeap();
 				selectNextDistributor();
 			}
 		}
 	}
 
+	private void resolveWonCardsPerTeam() {
+
+		if (currentMatch.twoPlayersVersusTwoPlayersGame()) {
+			// 2vs2
+			byte team1WonCards = (byte) (currentMatch.getTeam1().getPlayer(1)
+					.getWonCardsPerHeap().size() + currentMatch.getTeam1()
+					.getPlayer(2).getWonCardsPerHeap().size());
+			logger.debug("team1 won cards : " + team1WonCards);
+			byte team2WonCards = (byte) (currentMatch.getTeam2().getPlayer(1)
+					.getWonCardsPerHeap().size() + currentMatch.getTeam2()
+					.getPlayer(2).getWonCardsPerHeap().size());
+			logger.debug("team2 won cards : " + team2WonCards);
+			if (team1WonCards >= team2WonCards) {
+				currentMatch.incrementScore(currentMatch.getTeam1(),
+						(byte) (team1WonCards - 20));
+			} else {
+				currentMatch.incrementScore(currentMatch.getTeam2(),
+						(byte) (team2WonCards - 20));
+			}
+		} else {
+			// 1vs1
+			byte team1WonCards = (byte) currentMatch.getTeam1().getPlayer(1)
+					.getWonCardsPerHeap().size();
+			byte team2WonCards = (byte) currentMatch.getTeam2().getPlayer(1)
+					.getWonCardsPerHeap().size();
+			if (team1WonCards >= team2WonCards) {
+				currentMatch.incrementScore(currentMatch.getTeam1(),
+						(byte) (team1WonCards - 20));
+			} else {
+				currentMatch.incrementScore(currentMatch.getTeam2(),
+						(byte) (team2WonCards - 20));
+			}
+		}
+
+		// wipe won cards heap
+		for (Player player : currentMatch.getPlayers()) {
+			player.getWonCardsPerHeap().clear();
+		}
+	}
 }

@@ -13,7 +13,6 @@ import ronda.engine.elements.Card;
 import ronda.engine.elements.CardValue;
 import ronda.engine.elements.Move;
 import ronda.engine.elements.Player;
-import ronda.engine.elements.Team;
 
 public class Round {
 
@@ -106,13 +105,9 @@ public class Round {
 		if (board.isEmpty()) {
 			// Missa
 			logger.debug(player.getIdentifier() + " did missa.");
-			incrementScore(player, (byte) 1);
+			currentMatch.incrementScore(currentMatch.getPlayerTeam(player),
+					(byte) 1);
 		}
-	}
-
-	private void incrementScore(Player player, byte increment) {
-		Team teamToReward = currentMatch.getPlayerTeam(player);
-		teamToReward.setScore((byte) (teamToReward.getScore() + increment));
 	}
 
 	private static Map<CardValue, List<Card>> getFrequencyOfOccurencesInCardList(
@@ -182,7 +177,7 @@ public class Round {
 
 		List<Player> players = currentMatch.getPlayers();
 
-		// wipe initial hand cards of previous round
+		// wipe initial hand cards of previous round and won cards heap
 		for (Player player : players) {
 			player.getInitialHandCardsPerRound().clear();
 		}
@@ -196,7 +191,6 @@ public class Round {
 		List<Card> heap = currentMatch.getCurrentGame().getHeap();
 		int indexOfPlayerToDistributeTo = distributorIndex + 1;
 		indexOfPlayerToDistributeTo %= players.size();
-		System.out.println(indexOfPlayerToDistributeTo);
 
 		while (distibutorPlayer.getHandCardsPerRound().size() < cardsCount) {
 			Player cardReceivingPlayer = currentMatch.getPlayers().get(

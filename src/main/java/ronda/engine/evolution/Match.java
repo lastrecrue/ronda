@@ -18,6 +18,20 @@ public class Match {
 		initializePlayers(team1, team2);
 	}
 
+	/**
+	 * @return the team1
+	 */
+	public synchronized Team getTeam1() {
+		return team1;
+	}
+
+	/**
+	 * @return the team2
+	 */
+	public synchronized Team getTeam2() {
+		return team2;
+	}
+
 	private void initializePlayers(Team team1, Team team2) {
 		players.add(team1.getPlayer(1));
 		players.add(team2.getPlayer(1));
@@ -55,10 +69,6 @@ public class Match {
 		}
 	}
 
-	protected void updateTeamScore(Team team, int score) {
-		team.setScore((byte) (team.getScore() + score));
-	}
-
 	public void run() {
 		while (!matchEnded()) {
 			currentGame.run();
@@ -84,6 +94,14 @@ public class Match {
 		} else {
 			return null;
 		}
+	}
+
+	protected void incrementScore(Team teamToReward, byte increment) {
+		teamToReward.setScore((byte) (teamToReward.getScore() + increment));
+	}
+
+	public String getScore() {
+		return team1.getScore() + "#" + team2.getScore();
 	}
 
 	public List<Player> getPlayers() {
