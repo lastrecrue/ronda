@@ -80,7 +80,7 @@ public class Game {
 			if (heap.isEmpty()) {
 				resolveWonCardsPerTeam();
 				logger.debug("End of game. score (team1#team2) : "
-						+ currentMatch.getScore());
+						+ currentMatch.getOverallScore());
 				initializeHeap();
 				selectNextDistributor();
 			}

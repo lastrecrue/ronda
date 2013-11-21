@@ -3,10 +3,14 @@ package ronda.engine.evolution;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
+
 import ronda.engine.elements.Player;
 import ronda.engine.elements.Team;
 
 public class Match {
+
+	protected Logger logger = Logger.getLogger(Match.class);
 	private final Team team1;
 	private final Team team2;
 	private final Game currentGame = new Game(this);
@@ -76,7 +80,7 @@ public class Match {
 	}
 
 	public boolean matchEnded() {
-		return false;
+		return (getWinnerTeam() != null);
 	}
 
 	/*
@@ -88,8 +92,10 @@ public class Match {
 	 */
 	public Team getWinnerTeam() {
 		if (team1.getScore() > 20) {
+			logger.debug("Team 1 won with score :" + team1.getScore());
 			return team1;
 		} else if (team2.getScore() > 20) {
+			logger.debug("Team 2 won with score :" + team2.getScore());
 			return team2;
 		} else {
 			return null;
@@ -100,7 +106,7 @@ public class Match {
 		teamToReward.setScore((byte) (teamToReward.getScore() + increment));
 	}
 
-	public String getScore() {
+	public String getOverallScore() {
 		return team1.getScore() + "#" + team2.getScore();
 	}
 
