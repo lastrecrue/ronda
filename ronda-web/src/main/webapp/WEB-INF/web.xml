@@ -12,14 +12,16 @@
 
 	<servlet>
 		<servlet-name>resteasy-servlet</servlet-name>
-		<servlet-class>
-			org.jboss.resteasy.plugins.server.servlet.HttpServletDispatcher
-		</servlet-class>
+		<servlet-class>org.jboss.resteasy.plugins.server.servlet.HttpServletDispatcher</servlet-class>
+	</servlet>
+
+	<servlet>
+		<servlet-name>Resteasy</servlet-name>
+		<servlet-class>org.jboss.resteasy.plugins.server.servlet.Tomcat6CometDispatcherServlet</servlet-class>
 	</servlet>
 
 	<servlet-mapping>
-		<servlet-name>
-	resteasy-servlet</servlet-name>
+		<servlet-name>resteasy-servlet</servlet-name>
 		<url-pattern>/*</url-pattern>
 	</servlet-mapping>
 </web-app>

@@ -8,8 +8,13 @@ import javax.ws.rs.core.Response;
 
 import ma.ronda.web.entity.User;
 
+import org.apache.log4j.Logger;
+
 @Path("/user-management")
 public class UserManagementModule {
+
+	Logger logger = Logger.getLogger(getClass());
+
 	@GET
 	@Path("/users/{id}")
 	@Produces("application/json")
@@ -18,6 +23,12 @@ public class UserManagementModule {
 		user.setId(id);
 		user.setFirstName("Lokesh");
 		user.setLastName("Gupta");
-		return Response.status(200).entity(user).build();
+		Response build = Response.status(200).entity(user).build();
+		MatchManager matchManager = new MatchManager();
+
+		PushExample pushExample = new PushExample();
+		matchManager.getMyResource(pushExample);
+		logger.debug(id);
+		return build;
 	}
 }
