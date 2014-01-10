@@ -1,0 +1,10 @@
+/.settings
+/.project
+/ronda-core/target
+/ronda-web/target
+/ronda-core/.settings
+/ronda-web/.settings
+/ronda-web/.project
+/ronda-core/.project
+/ronda-web/.classpath
+/ronda-core/.classpath
