@@ -4,6 +4,7 @@
 package ronda.engine.elements.player;
 
 import ronda.engine.elements.Move;
+import ronda.engine.evolution.QuitGameException;
 
 /**
  * @author mehdi
@@ -11,8 +12,9 @@ import ronda.engine.elements.Move;
  */
 public interface PlayerActions {
 
-	Move playCard();
+	Move playCard() throws QuitGameException;
 
 	Move announce();
 
+	public void startPlaying();
 }

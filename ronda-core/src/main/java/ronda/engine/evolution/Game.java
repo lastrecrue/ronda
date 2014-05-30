@@ -38,6 +38,7 @@ public class Game {
 			} while (currentCardValue != null);
 		}
 		Collections.shuffle(heap);
+		logger.debug("Heap is Initialized!");
 	}
 
 	protected void selectNextDistributor() {
