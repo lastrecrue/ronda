@@ -114,4 +114,9 @@ public class Match {
 		return players;
 	}
 
+	public void addPlayer(Player player) {
+		// TODO Auto-generated method stub
+
+	}
+
 }
