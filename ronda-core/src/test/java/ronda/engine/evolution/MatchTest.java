@@ -2,6 +2,7 @@ package ronda.engine.evolution;
 
 import java.util.List;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import ronda.engine.elements.Card;
@@ -27,6 +28,7 @@ public class MatchTest extends AbstractTest {
 		match.run();
 	}
 
+	@Ignore
 	@Test
 	public void testBasicIAVsConsolePlayerMatch() {
 		Match match = MatchBuilder.getMatch1Vs1Builder(BasicIAPlayerBuilder
